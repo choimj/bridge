@@ -1,7 +1,6 @@
 import React from "react";
 
 const Intro = props => {
-  //console.log(props);
   const { length, weight, weights } = props.state;
 
   return (

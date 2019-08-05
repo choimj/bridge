@@ -5,15 +5,10 @@ import { numberCheck, stringCheck } from "../Utils/Validate";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as introActions from "../Store/Modules/Intro";
+import * as bridgeActions from "../Store/Modules/Bridge";
+import store from "../Store";
 
-const propTypes = {
-  length: PropTypes.string,
-  weight: PropTypes.string,
-  weights: PropTypes.string,
-  handleLangthChange: PropTypes.func,
-  handleWeightChange: PropTypes.func,
-  handleWeightsChange: PropTypes.func
-};
+const propTypes = {};
 
 class IntroContainer extends React.Component {
   state = {
@@ -34,9 +29,10 @@ class IntroContainer extends React.Component {
   };
   handleWeightChange = e => {
     let weight = e.target.value;
-    if (!numberCheck(Number(weight))) {
-      weight = "";
-    }
+    // if (!numberCheck(Number(weight))) {
+    //   weight = "";
+    // }
+
     this.setState({
       weight: weight
     });
@@ -45,19 +41,34 @@ class IntroContainer extends React.Component {
     let weights = e.target.value;
     // 유효성 체크하기
     //console.log(stringCheck(weights));
-    if (!stringCheck(weights)) {
-      weights = this.state.weights;
-    }
+    //if (!stringCheck(weights)) {
+    //weights = this.state.weights;
+    //}
     this.setState({
       weights: weights
     });
   };
   handleStartClick = e => {
     const { length, weight, weights } = this.state;
-    const actions = this.props.introActions;
-    actions.setLength(length);
-    actions.setWeight(weight);
-    actions.setWeights(weights);
+    const bridgeActions = this.props.bridgeActions;
+
+    // const { weights } = this.props;
+    const tmpStartArr = weights.split(",");
+    const tmpIngArr = [];
+    for (let i = 0; i < length; i++) {
+      tmpIngArr[i] = 0;
+    }
+
+    introActions.setLength(length);
+    introActions.setWeight(weight);
+    introActions.setweights(weights);
+
+    bridgeActions.setStartBridge(tmpStartArr.map(Number)); // startBridge
+    bridgeActions.setIngBridge(tmpIngArr); // ingBridge
+    bridgeActions.setEndBridge([]); // ingBridge
+    //bridgeActions.setWeight(weight); // bridge length
+
+    //console.log(store.getState());
     this.props.history.push("/Bridge");
   };
   render() {
@@ -76,18 +87,15 @@ class IntroContainer extends React.Component {
 IntroContainer.propTypes = propTypes;
 
 const mapStateToProps = state => {
-  return {
-    length: state.Intro.length,
-    weight: state.Intro.weight,
-    weights: state.Intro.weights
-  };
+  return {};
 };
 const mapDispatchToPros = dispatch => {
   return {
-    introActions: bindActionCreators(introActions, dispatch)
+    introActions: bindActionCreators(introActions, dispatch),
+    bridgeActions: bindActionCreators(bridgeActions, dispatch)
   };
 };
-//export default IntroContainer;
+
 export default connect(
   mapStateToProps,
   mapDispatchToPros

@@ -5,7 +5,7 @@ const SET_WEIGHTS = "intro/SET_WEIGHTS";
 
 export const setLength = createAction(SET_LENGTH);
 export const setWeight = createAction(SET_WEIGHT);
-export const setWeights = createAction(SET_WEIGHTS);
+export const setweights = createAction(SET_WEIGHTS);
 
 const initialState = {
   length: "",
@@ -13,7 +13,8 @@ const initialState = {
   weights: ""
 };
 
-const IntroReducer = (state = initialState, action) => {
+const Intro = (state = initialState, action) => {
+  //console.log(action);
   switch (action.type) {
     case "intro/SET_LENGTH":
       return {
@@ -35,4 +36,4 @@ const IntroReducer = (state = initialState, action) => {
   }
 };
 
-export default IntroReducer;
+export default Intro;
