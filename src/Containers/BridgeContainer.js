@@ -7,16 +7,16 @@ import * as bridgeActions from "../Store/Modules/Bridge";
 import store from "../Store";
 import * as introActions from "../Store/Modules/Intro";
 
-const propTypes = {};
+const propTypes = {
+  startBridge: PropTypes.array,
+  ingBridge: PropTypes.array,
+  endBridge: PropTypes.array,
+  time: PropTypes.number
+};
 
 class BridgeContainer extends React.Component {
   constructor(props) {
     super(props);
-
-    //const bridgeActions = bridgeActions;
-    //store.subscribe(actions.setBridgeLength);
-
-    //console.log("..");
 
     introActions.setLength("5");
     introActions.setWeight("10");
@@ -35,126 +35,92 @@ class BridgeContainer extends React.Component {
   };
 
   start = () => {
-    //setInterval(this.handleCrossBridge, 2000);
-    // setTimeout(() => {
-    //   this.setState({
-    //     startBridge: startArr,
-    //     ingBridge: ingArr,
-    //     endBridge: endArr
-    //   });
-    // }, 0);
-
     const { startArr, ingArr, endArr } = this.props;
-    let { startBridge } = this.state;
     this.setState({
       startBridge: startArr,
       ingBridge: ingArr,
       endBridge: endArr
     });
-    //console.log(this.state);
   };
 
   componentDidMount = () => {
-    //console.log(this.state);
-    //console.log("componentDidMount");
     setTimeout(this.init, 1000);
-    //setTimeout(this.handleCrossBridge, 2000);
   };
-
+  bridgeInterval = null;
+  startBrigeLength = 0;
   // 다리위에 있는 동물 무게 합 구하기
   sumArray = (accumulator, currentValue) => accumulator + currentValue;
   init = () => {
     this.start();
-
-    //let { startBridge } = this.state;
-    //console.log(this.startBridge.length);
-    let aa
-    if (this.state.startBridge.length > 0) {
-      aa = setInterval(this.handleCrossStartBridge, 500);
-      //setInterval(this.handleCrossIngBridge, 500);
-    } else {
-      clearInterval(aa);
-    }
+    this.startBrigeLength = this.state.startBridge.length;
+    this.bridgeInterval = setInterval(this.handleCrossStartBridge, 1000);
   };
 
   handleCrossStartBridge = () => {
-    let { startBridge } = this.state;
-    startBridge = startBridge.slice(1, startBridge.length);
-    this.setState({
-      startBridge: startBridge
-    });
-    console.log("..");
+    //시작 배열에 요소가 있는 경우 startBridge -> IngBridge로 이동시키기
+    this.handleCrossIngBridge();
+  };
+
+  sumIngArray = arr => {
+    return arr.reduce(this.sumArray);
   };
 
   handleCrossIngBridge = () => {
-    const { weight, length } = this.props;
-    let { ingBridge } = this.state;
-    if (ingBridge[length - 1] !== 0) {
-      setTimeout(this.handleCrossEndBridge, 500);
-    }
+    const { length } = this.props;
+    const { ingBridge, endBridge, time } = this.state;
 
-    ingBridge = ingBridge.slice(0, length - 1);
-    this.setState({ ingBridge: ingBridge });
-    console.log(">");
+    const { weight } = this.props;
+    let { startBridge } = this.state;
+    let firstStartBridge = !startBridge[0] ? 0 : startBridge[0];
+    let tmpStartBridge = startBridge.slice(1, startBridge.length);
+    let tmpIngBridge = [
+      firstStartBridge,
+      ...ingBridge.slice(0, ingBridge.length - 1)
+    ];
+    let tmpEndBridge =
+      ingBridge[length - 1] !== 0
+        ? [ingBridge[length - 1], ...endBridge]
+        : [...endBridge];
+
+    if (this.sumIngArray(tmpIngBridge) > weight) {
+      tmpStartBridge = [firstStartBridge, ...tmpStartBridge];
+      firstStartBridge = 0;
+    }
+    this.setState({
+      startBridge: tmpStartBridge,
+      ingBridge: [
+        firstStartBridge,
+        ...ingBridge.slice(0, ingBridge.length - 1)
+      ],
+      endBridge: tmpEndBridge
+    });
+
+    this.setState({
+      time: time + 1
+    });
+
+    this.handleClearInterval();
+  };
+
+  handleClearInterval = () => {
+    const { endBridge } = this.state;
+
+    if (endBridge.length === this.startBrigeLength) {
+      clearInterval(this.bridgeInterval);
+    }
   };
 
   handleCrossEndBridge = () => {
-    const { weight, length } = this.props;
+    const { length } = this.props;
     let { ingBridge, endBridge } = this.state;
-    endBridge = [ingBridge[length - 1], ...endBridge];
-    this.setState({ endBridge: endBridge });
-  };
 
-  handleCrossBridge = () => {
-    //console.log(this.state);
-    //console.log(this.props);
-    const { weight, length } = this.props;
-    let { startBridge, ingBridge, endBridge, time } = this.state;
-
-    const weightsLng = startBridge.length;
-    //const actions = this.props.bridgeActions;
-    //console.log(actions);
-    //setTimeout(() => {
-    while (endBridge.length < weightsLng) {
-      // 1. 다리의 맨 마지막 요소 제거
-      if (ingBridge[length - 1] !== 0) {
-        endBridge = [ingBridge[length - 1], ...endBridge];
-        //actions.setEndBridge(endBridge);
-        this.setState({ endBridge: endBridge });
-      }
-      ingBridge = ingBridge.slice(0, length - 1);
-      this.setState({ ingBridge: ingBridge });
-      //console.log(ingBridge);
-      // 2. 다리 위의 무게 합산
-      let sum = ingBridge.reduce(this.sumArray);
-
-      if (sum + startBridge[0] <= weight) {
-        //다리에 올라가 있는 요소 합 < 허용되는 최대 무게
-        ingBridge = [startBridge[0], ...ingBridge];
-        startBridge = startBridge.slice(1, startBridge.length);
-        //actions.setStartBridge(startBridge);
-        //console.log(ingBridge);
-        this.setState({ ingBridge: ingBridge });
-        this.setState({
-          startBridge: startBridge
-        });
-      } else {
-        ingBridge = [0, ...ingBridge];
-        //actions.setIngBridge(ingBridge);
-        this.setState({ ingBridge: ingBridge });
-        console.log(ingBridge);
-      }
-      time = time + 1;
-      //actions.setTime(time);
-      this.setState({ time: time });
-    }
-    //}, 2000);
+    this.setState({ endBridge: [ingBridge[length - 1], ...endBridge] });
   };
 
   render() {
     const { length, weight, weights } = this.props;
     const { startBridge } = this.state;
-    //console.log(this.props);
+
     return (
       <Bridge
         length={length}
@@ -164,7 +130,6 @@ class BridgeContainer extends React.Component {
         state={this.state}
       />
     );
-    //return <div />;
   }
 }
 

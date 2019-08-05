@@ -6,9 +6,12 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as introActions from "../Store/Modules/Intro";
 import * as bridgeActions from "../Store/Modules/Bridge";
-import store from "../Store";
 
-const propTypes = {};
+const propTypes = {
+  length: PropTypes.string,
+  weight: PropTypes.string,
+  weights: PropTypes.string
+};
 
 class IntroContainer extends React.Component {
   state = {
@@ -51,24 +54,16 @@ class IntroContainer extends React.Component {
   handleStartClick = e => {
     const { length, weight, weights } = this.state;
     const bridgeActions = this.props.bridgeActions;
-
-    // const { weights } = this.props;
     const tmpStartArr = weights.split(",");
-    const tmpIngArr = [];
-    for (let i = 0; i < length; i++) {
-      tmpIngArr[i] = 0;
-    }
 
     introActions.setLength(length);
     introActions.setWeight(weight);
     introActions.setweights(weights);
 
     bridgeActions.setStartBridge(tmpStartArr.map(Number)); // startBridge
-    bridgeActions.setIngBridge(tmpIngArr); // ingBridge
+    bridgeActions.setIngBridge(Array(length).fill(0)); // ingBridge
     bridgeActions.setEndBridge([]); // ingBridge
-    //bridgeActions.setWeight(weight); // bridge length
 
-    //console.log(store.getState());
     this.props.history.push("/Bridge");
   };
   render() {

@@ -3,10 +3,6 @@ import React from "react";
 
 const Bridge = ({ length, weight, weights, startBridge, state }) => {
   const { ingBridge, endBridge, time } = state;
-  //const { length, weight, weights } = props;
-  //console.log(props);
-  //console.log(endBridge);
-  //const { time } = props;
 
   return (
     <div>
@@ -14,6 +10,7 @@ const Bridge = ({ length, weight, weights, startBridge, state }) => {
         <p>Length: {length}</p>
         <p>Weight: {weight}</p>
         <p>Weights: {weights}</p>
+        <p>time : {time}</p>
       </div>
       <div />
       <div style={{ display: "flex" }}>

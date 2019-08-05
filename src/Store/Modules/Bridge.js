@@ -20,8 +20,6 @@ const initialState = {
 };
 
 const Bridge = (state = initialState, action) => {
-  //console.log(action.type, "", action.payload);
-  //console.log(state);
   switch (action.type) {
     case "bridge/SET_START_BRIDGE":
       return {
