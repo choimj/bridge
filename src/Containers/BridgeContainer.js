@@ -26,15 +26,6 @@ class BridgeContainer extends React.Component {
     totalWeight: 0
   };
 
-  start = () => {
-    const { startArr, ingArr, endArr } = this.props;
-    this.setState({
-      startBridge: startArr,
-      ingBridge: ingArr,
-      endBridge: endArr
-    });
-  };
-
   componentWillMount = () => {
     if (!Number(this.props.length)) {
       // store에 저장된 값이 입려된 값이 아닌 초기값인 경우 alert 창 노출과 함께 페이지 이동
@@ -44,6 +35,12 @@ class BridgeContainer extends React.Component {
   };
 
   componentDidMount = () => {
+    const { startArr, ingArr, endArr } = this.props;
+    this.setState({
+      startBridge: startArr,
+      ingBridge: ingArr,
+      endBridge: endArr
+    });
     // DOM 이 마운트 된 후 setTimeout 으로 init 함수 실행
     this.bridgeSetTimeout = setTimeout(this.init, 1000);
   };
