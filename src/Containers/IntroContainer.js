@@ -24,7 +24,7 @@ class IntroContainer extends React.Component {
     let length = e.target.value;
 
     if (!numberCheck(Number(length))) {
-      length = "";
+      length = this.state.length;
     }
     this.setState({
       length: length
@@ -32,9 +32,10 @@ class IntroContainer extends React.Component {
   };
   handleWeightChange = e => {
     let weight = e.target.value;
-    // if (!numberCheck(Number(weight))) {
-    //   weight = "";
-    // }
+
+    if (!numberCheck(Number(weight))) {
+      weight = this.state.weight;
+    }
 
     this.setState({
       weight: weight
@@ -43,10 +44,9 @@ class IntroContainer extends React.Component {
   handleWeightsChange = e => {
     let weights = e.target.value;
     // 유효성 체크하기
-    //console.log(stringCheck(weights));
-    //if (!stringCheck(weights)) {
-    //weights = this.state.weights;
-    //}
+    if (!stringCheck(weights)) {
+      weights = this.state.weights;
+    }
     this.setState({
       weights: weights
     });

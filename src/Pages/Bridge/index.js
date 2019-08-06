@@ -1,31 +1,44 @@
 import React from "react";
-//import pandaImg from "../Images/panda.png";
+
+import StartBridge from "../Bridge/StartBridge";
+import IngBridge from "../Bridge/IngBridge";
+import EndBridge from "../Bridge/EndBridge";
+import styled from "styled-components";
+
+const Root = styled.div`
+  height: 100vh;
+  width: 100vw;
+  background-color: #d7993d;
+`;
+
+const TopArea = styled.div`
+  & > p {
+    font-size: 20px;
+  }
+`;
+
+const TimeArea = styled.div`
+  text-align: center;
+  font-size: 30px;
+`;
 
 const Bridge = ({ length, weight, weights, startBridge, state }) => {
   const { ingBridge, endBridge, time } = state;
 
   return (
-    <div>
-      <div>
+    <Root>
+      <TopArea>
         <p>Length: {length}</p>
         <p>Weight: {weight}</p>
         <p>Weights: {weights}</p>
+      </TopArea>
+      <TimeArea>
         <p>time : {time}</p>
-      </div>
-      <div />
+      </TimeArea>
       <div style={{ display: "flex" }}>
         <div style={{ flex: "1", border: "2px solid green" }}>
           {startBridge.map((val, i) => (
-            <div
-              style={{
-                width: "50px",
-                height: "50px",
-                border: "1px solid black"
-              }}
-              key={i}
-            >
-              {val}
-            </div>
+            <StartBridge key={i} val={val} />
           ))}
         </div>
 
@@ -36,17 +49,7 @@ const Bridge = ({ length, weight, weights, startBridge, state }) => {
           }}
         >
           {ingBridge.map((val, i) => (
-            <div
-              style={{
-                width: "50px",
-                height: "50px",
-                border: "1px solid yellow",
-                float: "left"
-              }}
-              key={i}
-            >
-              {val}
-            </div>
+            <IngBridge key={i} val={val} />
           ))}
         </div>
         {/* 다리 건너기 완료한 요소들 */}
@@ -57,20 +60,11 @@ const Bridge = ({ length, weight, weights, startBridge, state }) => {
           }}
         >
           {endBridge.map((val, i) => (
-            <div
-              style={{
-                width: "50px",
-                height: "50px",
-                border: "1px solid red"
-              }}
-              key={i}
-            >
-              {val}
-            </div>
+            <EndBridge key={i} val={val} />
           ))}
         </div>
       </div>
-    </div>
+    </Root>
   );
 };
 
