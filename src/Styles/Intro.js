@@ -12,14 +12,14 @@ export const Root = styled.div`
   flex-direction: column;
 
   & button {
-    font-size: 20px;
+    font-size: 23px;
     width: 20vw;
     margin: 5px 0;
     text-align: center;
   }
 `;
 
-export const InputArea = styled.p`
+export const InputArea = styled.div`
   width: 40vw;
   text-align: right;
   position: absolute;
@@ -37,5 +37,9 @@ export const InputArea = styled.p`
   & > p > input {
     font-size: 20px;
     text-align: right;
+    width: 20vw;
+  }
+  & p:nth-child(3) input {
+    width: 30vw;
   }
 `;

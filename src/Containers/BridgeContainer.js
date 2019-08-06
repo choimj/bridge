@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import Bridge from "../Pages/Bridge";
 import { bindActionCreators } from "redux";
 import * as bridgeActions from "../Store/Modules/Bridge";
-import store from "../Store";
-import * as introActions from "../Store/Modules/Intro";
 
 const propTypes = {
   startBridge: PropTypes.array,
@@ -15,23 +13,16 @@ const propTypes = {
 };
 
 class BridgeContainer extends React.Component {
-  constructor(props) {
-    super(props);
-
-    introActions.setLength("5");
-    introActions.setWeight("10");
-    introActions.setweights("3, 7, 3, 2, 5, 8");
-
-    store.dispatch(bridgeActions.setIngBridge([0, 0, 0, 0, 0]));
-    store.dispatch(bridgeActions.setWeight("10"));
-    store.dispatch(bridgeActions.setStartBridge([3, 7, 3, 2, 5, 8]));
-  }
+  bridgeInterval = null; //setInterval 관리 변수
+  bridgeSetTimeout = null;
+  startBrigeLength = 0; // 최초 startBridge의 길이 저장 변수
 
   state = {
     startBridge: [],
     ingBridge: [],
     endBridge: [],
-    time: 0
+    time: 0,
+    totalWeight: 0
   };
 
   start = () => {
@@ -43,11 +34,26 @@ class BridgeContainer extends React.Component {
     });
   };
 
-  componentDidMount = () => {
-    setTimeout(this.init, 1000);
+  componentWillMount = () => {
+    if (!Number(this.props.length)) {
+      alert("잘못된 접근입니다.");
+      this.props.history.push("/");
+    }
   };
-  bridgeInterval = null;
-  startBrigeLength = 0;
+
+  componentDidMount = () => {
+    this.bridgeSetTimeout = setTimeout(this.init, 1000);
+  };
+
+  componentWillUnmount = () => {
+    if (this.bridgeInterval !== null) {
+      clearInterval(this.bridgeInterval);
+    }
+    if (this.bridgeSetTimeout !== null) {
+      clearTimeout(this.bridgeSetTimeout);
+    }
+  };
+
   // 다리위에 있는 동물 무게 합 구하기
   sumArray = (accumulator, currentValue) => accumulator + currentValue;
   init = () => {
@@ -70,7 +76,8 @@ class BridgeContainer extends React.Component {
     const { ingBridge, endBridge, time } = this.state;
 
     const { weight } = this.props;
-    let { startBridge } = this.state;
+    let { startBridge, totalWeight } = this.state;
+
     let firstStartBridge = !startBridge[0] ? 0 : startBridge[0];
     let tmpStartBridge = startBridge.slice(1, startBridge.length);
     let tmpIngBridge = [
@@ -81,10 +88,11 @@ class BridgeContainer extends React.Component {
       ingBridge[length - 1] !== 0
         ? [ingBridge[length - 1], ...endBridge]
         : [...endBridge];
-
-    if (this.sumIngArray(tmpIngBridge) > weight) {
+    let tmpTotalWeight = this.sumIngArray(tmpIngBridge);
+    if (tmpTotalWeight > weight) {
       tmpStartBridge = [firstStartBridge, ...tmpStartBridge];
       firstStartBridge = 0;
+      tmpTotalWeight = totalWeight;
     }
     this.setState({
       startBridge: tmpStartBridge,
@@ -92,7 +100,8 @@ class BridgeContainer extends React.Component {
         firstStartBridge,
         ...ingBridge.slice(0, ingBridge.length - 1)
       ],
-      endBridge: tmpEndBridge
+      endBridge: tmpEndBridge,
+      totalWeight: tmpTotalWeight
     });
 
     this.setState({
@@ -119,14 +128,13 @@ class BridgeContainer extends React.Component {
 
   render() {
     const { length, weight, weights } = this.props;
-    const { startBridge } = this.state;
+    // const { totalWeight } = this.state;
 
     return (
       <Bridge
         length={length}
         weight={weight}
         weights={weights}
-        startBridge={startBridge}
         state={this.state}
       />
     );
@@ -137,12 +145,9 @@ BridgeContainer.propTypes = propTypes;
 
 const mapStateToProps = state => {
   return {
-    // length: state.Intro.length,
-    // weight: state.Intro.weight,
-    // weights: state.Intro.weights,
-    length: "5",
-    weight: "10",
-    weights: "3, 7, 3, 2, 5, 8",
+    length: state.Intro.length,
+    weight: state.Intro.weight,
+    weights: state.Intro.weights,
     startArr: state.Bridge.startBridge,
     ingArr: state.Bridge.ingBridge,
     endArr: state.Bridge.endBridge,

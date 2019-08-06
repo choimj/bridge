@@ -19,7 +19,7 @@ class IntroContainer extends React.Component {
     weight: "",
     weights: ""
   };
-
+  // length 입력폼 validate check, onchange handler
   handleLengthChange = e => {
     let length = e.target.value;
 
@@ -30,6 +30,7 @@ class IntroContainer extends React.Component {
       length: length
     });
   };
+  // weight 입력폼 validate check, onchange handler
   handleWeightChange = e => {
     let weight = e.target.value;
 
@@ -41,6 +42,7 @@ class IntroContainer extends React.Component {
       weight: weight
     });
   };
+  // weights 입력폼 validate check, onchange handler
   handleWeightsChange = e => {
     let weights = e.target.value;
     // 유효성 체크하기
@@ -51,20 +53,21 @@ class IntroContainer extends React.Component {
       weights: weights
     });
   };
+  // start 버튼 클릭 시 reducer, store 에 액션 보내서 state 값 수정 후 다음 페이지로 이동
   handleStartClick = e => {
     const { length, weight, weights } = this.state;
-    const bridgeActions = this.props.bridgeActions;
+    const { introActions, bridgeActions } = this.props;
     const tmpStartArr = weights.split(",");
 
     introActions.setLength(length);
     introActions.setWeight(weight);
     introActions.setweights(weights);
 
-    bridgeActions.setStartBridge(tmpStartArr.map(Number)); // startBridge
-    bridgeActions.setIngBridge(Array(length).fill(0)); // ingBridge
-    bridgeActions.setEndBridge([]); // ingBridge
+    bridgeActions.setStartBridge(tmpStartArr.map(Number)); // startBridge > weight 스트링을 배열로 변경 후 요소 타입을 Number로 변경
+    bridgeActions.setIngBridge(Array(Number(length)).fill(0)); // ingBridge > length만큼 배열 생성 후 0으로 초기화
+    bridgeActions.setEndBridge([]); // endBridge
 
-    this.props.history.push("/Bridge");
+    this.props.history.push("/Bridge"); // 위의 모든 액션 처리 후 페이지 이동
   };
   render() {
     return (
