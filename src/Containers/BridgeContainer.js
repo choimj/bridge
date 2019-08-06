@@ -42,7 +42,7 @@ class BridgeContainer extends React.Component {
       endBridge: endArr
     });
     // DOM 이 마운트 된 후 setTimeout 으로 init 함수 실행
-    this.bridgeSetTimeout = setTimeout(this.init, 1000);
+    this.bridgeSetTimeout = setTimeout(this.init, 0);
   };
 
   componentWillUnmount = () => {
@@ -59,7 +59,6 @@ class BridgeContainer extends React.Component {
   sumArray = (accumulator, currentValue) => accumulator + currentValue;
   // 초기화 함수
   init = () => {
-    this.start(); // state값을 store의 값으로 초기화
     this.startBrigeLength = this.state.startBridge.length;
     this.bridgeInterval = setInterval(this.handleCrossStartBridge, 1000);
   };
