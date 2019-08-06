@@ -13,8 +13,9 @@ const propTypes = {
 };
 
 class BridgeContainer extends React.Component {
+  // 전역변수
   bridgeInterval = null; //setInterval 관리 변수
-  bridgeSetTimeout = null;
+  bridgeSetTimeout = null; //setTimeout 관리 변수
   startBrigeLength = 0; // 최초 startBridge의 길이 저장 변수
 
   state = {
@@ -36,16 +37,19 @@ class BridgeContainer extends React.Component {
 
   componentWillMount = () => {
     if (!Number(this.props.length)) {
+      // store에 저장된 값이 입려된 값이 아닌 초기값인 경우 alert 창 노출과 함께 페이지 이동
       alert("잘못된 접근입니다.");
       this.props.history.push("/");
     }
   };
 
   componentDidMount = () => {
+    // DOM 이 마운트 된 후 setTimeout 으로 init 함수 실행
     this.bridgeSetTimeout = setTimeout(this.init, 1000);
   };
 
   componentWillUnmount = () => {
+    // DOM 이 언마운트 될 때 비동기 함수 클리어
     if (this.bridgeInterval !== null) {
       clearInterval(this.bridgeInterval);
     }
@@ -56,8 +60,9 @@ class BridgeContainer extends React.Component {
 
   // 다리위에 있는 동물 무게 합 구하기
   sumArray = (accumulator, currentValue) => accumulator + currentValue;
+  // 초기화 함수
   init = () => {
-    this.start();
+    this.start(); // state값을 store의 값으로 초기화
     this.startBrigeLength = this.state.startBridge.length;
     this.bridgeInterval = setInterval(this.handleCrossStartBridge, 1000);
   };
