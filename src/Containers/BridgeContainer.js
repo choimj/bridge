@@ -92,8 +92,8 @@ class BridgeContainer extends React.Component {
     let tmpTotalWeight = this.sumIngArray(tmpIngBridge);
     if (tmpTotalWeight > weight) {
       tmpStartBridge = [firstStartBridge, ...tmpStartBridge];
+      tmpTotalWeight = this.sumIngArray(tmpIngBridge) - firstStartBridge;
       firstStartBridge = 0;
-      tmpTotalWeight = totalWeight;
     }
     this.setState({
       startBridge: tmpStartBridge,
