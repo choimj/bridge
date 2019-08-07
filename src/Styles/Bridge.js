@@ -3,6 +3,7 @@ import bgImg from "../Images/bridge_background.jpg";
 import bIcon from "../Images/b-icon.jpeg";
 
 // main style
+// 필요한 부분만 컴포넌트 파일 내부에 스타일 코드 위치
 export const Root = styled.div`
   position: relative;
 

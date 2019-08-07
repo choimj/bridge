@@ -3,27 +3,27 @@ import InputField from "./InputField";
 import * as styles from "../../Styles/Intro";
 
 const Intro = props => {
-  const { length, weight, weights } = props.state;
-
+  const { length, weight, weights } = props;
+  //length -> value로 변경
   return (
     <styles.Root>
       <styles.InputArea>
         <InputField
           title="Length"
           type="text"
-          length={length}
+          value={length}
           onLengthChange={props.onLengthChange}
         />
         <InputField
           title="Weight"
           type="text"
-          length={weight}
+          value={weight}
           onLengthChange={props.onWeightChange}
         />
         <InputField
           title="Weights"
           type="text"
-          length={weights}
+          value={weights}
           onLengthChange={props.onWeightsChange}
         />
         <div>

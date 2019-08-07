@@ -6,11 +6,11 @@ const InputField = props => {
       <label>{props.title}</label>
       <input
         type={props.type}
-        value={props.length}
+        value={props.value}
         onChange={props.onLengthChange}
       />
     </p>
   );
 };
-
+//propType이 필요!!!!
 export default InputField;

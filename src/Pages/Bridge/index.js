@@ -5,9 +5,10 @@ import IngBridge from "../Bridge/IngBridge";
 import EndBridge from "../Bridge/EndBridge";
 import * as Styles from "../../Styles/Bridge";
 
+// styled-componenet / className 둘중 하나만!!
 const Bridge = ({ length, weight, weights, state }) => {
   const { startBridge, ingBridge, endBridge, time, totalWeight } = state;
-
+  //container 안의 Pages > Bridge 디렉토리 안으로 이동
   return (
     <Styles.Root>
       <Styles.TopArea>
@@ -15,7 +16,7 @@ const Bridge = ({ length, weight, weights, state }) => {
         <p>Weight: {weight}</p>
         <p>Weights: {weights}</p>
       </Styles.TopArea>
-
+      {/* 공통된 스타일은 분기시키기 className -> styled-component 로 변경 가능*/}
       <Styles.FlexWrapper>
         <div className="startClass">
           {startBridge.map((val, i) => (
