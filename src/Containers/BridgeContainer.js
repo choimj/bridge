@@ -77,7 +77,7 @@ class BridgeContainer extends React.Component {
     const { ingBridge, endBridge, time } = this.state;
 
     const { weight } = this.props;
-    let { startBridge, totalWeight } = this.state;
+    let { startBridge } = this.state;
 
     let firstStartBridge = !startBridge[0] ? 0 : startBridge[0];
     let tmpStartBridge = startBridge.slice(1, startBridge.length);
