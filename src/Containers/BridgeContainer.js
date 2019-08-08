@@ -65,56 +65,102 @@ class BridgeContainer extends React.Component {
 
   crossStartBridge = () => {
     //시작 배열에 요소가 있는 경우 startBridge -> IngBridge로 이동시키기
-    this.crossIngBridge();
+    //this.crossIngBridge();
+    this.crossIngBridgeNew();
   };
 
   sumIngArray = arr => {
     return arr.reduce(this.sumArray);
   };
 
-  // handle > 이벤트를 바로 받아서 처리할 경우
-  // 이 경우 단순 함수이므로 handle 키워드 지양
-  crossIngBridge = () => {
-    const { length } = this.props;
-    const { ingBridge, endBridge, time } = this.state;
-
+  // 코드개선 된 함수
+  crossIngBridgeNew = () => {
     const { weight } = this.props;
-    let { startBridge } = this.state;
-    // 자르기 전에 체크 후 조건이 맞지않는 경우 자르지 말기
-    let firstStartBridge = !startBridge[0] ? 0 : startBridge[0];
+    const { startBridge, ingBridge, time } = this.state;
+    const startBridgeLength = startBridge.length;
+    let firstElement = !startBridge[0] ? 0 : startBridge[0];
+    let tmpIngArr = ingBridge;
+    let lastElement = tmpIngArr[tmpIngArr.length - 1];
 
-    let tmpStartBridge = startBridge.slice(1, startBridge.length);
-
-    let tmpIngBridge = [
-      firstStartBridge,
-      ...ingBridge.slice(0, ingBridge.length - 1)
-    ];
-
-    let tmpEndBridge =
-      ingBridge[length - 1] !== 0
-        ? [ingBridge[length - 1], ...endBridge]
-        : [...endBridge];
-
-    let tmpTotalWeight = this.sumIngArray(tmpIngBridge);
-    if (tmpTotalWeight > weight) {
-      tmpStartBridge = [firstStartBridge, ...tmpStartBridge];
-      tmpTotalWeight = tmpTotalWeight - firstStartBridge;
-      firstStartBridge = 0;
-    }
+    tmpIngArr = [...ingBridge.slice(0, ingBridge.length - 1)];
     this.setState({
-      startBridge: tmpStartBridge,
-      ingBridge: [
-        firstStartBridge,
-        ...ingBridge.slice(0, ingBridge.length - 1)
-      ],
-      endBridge: tmpEndBridge,
-      totalWeight: tmpTotalWeight,
-      time: time + 1
+      ingBridge: tmpIngArr
     });
 
+    let sumIngElement = this.sumIngArray(tmpIngArr) + firstElement;
+
+    if (sumIngElement <= weight) {
+      // 다리에 올리기
+      tmpIngArr = [firstElement, ...tmpIngArr];
+      // startBridge 의 첫번째 요소 slice
+      this.setState({
+        startBridge: startBridge.slice(1, startBridgeLength),
+        ingBridge: tmpIngArr,
+        totalWeight: sumIngElement,
+        time: time + 1
+      });
+    } else {
+      tmpIngArr = [0, ...tmpIngArr];
+
+      this.setState({
+        ingBridge: tmpIngArr,
+        time: time + 1
+      });
+    }
+
+    this.onEndBridge(Number(lastElement));
     this.opClearInterval(); //함수명 변경
   };
 
+  onEndBridge = val => {
+    const { endBridge } = this.state;
+    if (val !== 0) {
+      this.setState({
+        endBridge: [...endBridge, val]
+      });
+    }
+  };
+  // handle > 이벤트를 바로 받아서 처리할 경우
+  // 이 경우 단순 함수이므로 handle 키워드 지양
+  // crossIngBridge = () => {
+  //   const { length, weight } = this.props;
+  //   const { startBridge, ingBridge, endBridge, time } = this.state;
+
+  //   // 자르기 전에 체크 후 조건이 맞지않는 경우 자르지 말기
+  //   let firstStartBridge = !startBridge[0] ? 0 : startBridge[0];
+
+  //   let tmpStartBridge = startBridge.slice(1, startBridge.length);
+
+  //   let tmpIngBridge = [
+  //     firstStartBridge,
+  //     ...ingBridge.slice(0, ingBridge.length - 1)
+  //   ];
+
+  //   let tmpEndBridge =
+  //     ingBridge[length - 1] !== 0
+  //       ? [ingBridge[length - 1], ...endBridge]
+  //       : [...endBridge];
+
+  //   let tmpTotalWeight = this.sumIngArray(tmpIngBridge);
+  //   if (tmpTotalWeight > weight) {
+  //     tmpStartBridge = [firstStartBridge, ...tmpStartBridge];
+  //     tmpTotalWeight = tmpTotalWeight - firstStartBridge;
+  //     firstStartBridge = 0;
+  //   }
+  //   this.setState({
+  //     startBridge: tmpStartBridge,
+  //     ingBridge: [
+  //       firstStartBridge,
+  //       ...ingBridge.slice(0, ingBridge.length - 1)
+  //     ],
+  //     endBridge: tmpEndBridge,
+  //     totalWeight: tmpTotalWeight,
+  //     time: time + 1
+  //   });
+
+  //   this.opClearInterval(); //함수명 변경
+  // };
+  //비동기 함수 제거여부 판단 후 제거하는 함수
   opClearInterval = () => {
     const { endBridge } = this.state;
 
